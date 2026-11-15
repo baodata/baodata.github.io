@@ -4,66 +4,27 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>lữ bảo đạt</title>
-  <style>
-    :root {
-      --mouse-x: -1000px;
-      --mouse-y: -1000px;
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      min-height: 100vh;
-      background-color: #0b0f0e;
-      color: #f8fafc;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-      overflow: hidden;
-      position: relative;
-    }
-
-    /* Vầng sáng xanh lá đi theo con trỏ chuột */
-    .mouse-glow {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      background: radial-gradient(
-        500px circle at var(--mouse-x) var(--mouse-y),
-        rgba(16, 185, 129, 0.18),
-        rgba(5, 150, 105, 0.05) 40%,
-        transparent 70%
-      );
-      z-index: 1;
-    }
-
-    /* Nội dung chính */
-    .name {
-      position: relative;
-      z-index: 2;
-      font-size: 1.75rem;
-      font-weight: 500;
-      letter-spacing: 0.04em;
-      user-select: none;
-      transition: color 0.3s ease;
-    }
-  </style>
+  <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
+  <!-- Interactive green mouse glow -->
   <div class="mouse-glow"></div>
-  <div class="name">lữ bảo đạt</div>
 
-  <script>
-    // Cập nhật vị trí chuột cho CSS Variable theo thời gian thực
-    window.addEventListener('pointermove', (event) => {
-      document.documentElement.style.setProperty('--mouse-x', `${event.clientX}px`);
-      document.documentElement.style.setProperty('--mouse-y', `${event.clientY}px`);
-    });
-  </script>
+  <!-- Background floating logos -->
+  <div id="floaters-container" class="floaters-container"></div>
+
+  <!-- Modular component placeholders -->
+  <div data-include="components/header.html"></div>
+  <div data-include="components/hero.html"></div>
+  <div data-include="components/about.html"></div>
+  <div data-include="components/projects.html"></div>
+  <div data-include="components/contact.html"></div>
+  <div data-include="components/footer.html"></div>
+
+  <!-- Scripts -->
+  <script src="assets/js/loader.js"></script>
+  <script src="assets/js/glow.js"></script>
+  <script src="assets/js/floaters.js"></script>
+  <script src="assets/js/main.js"></script>
 </body>
 </html>
