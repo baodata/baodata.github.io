@@ -18,6 +18,7 @@ async function loadComponents() {
   });
 
   await Promise.all(tasks);
+  document.dispatchEvent(new CustomEvent('componentsLoaded'));
 }
 
 document.addEventListener('DOMContentLoaded', loadComponents);

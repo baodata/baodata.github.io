@@ -46,11 +46,34 @@
     }
 
     .project-title {
-      font-size: 1.25rem !important;
+      font-size: 1.2rem !important;
       font-weight: 600 !important;
       color: #f8fafc !important;
       margin-bottom: 0.85rem !important;
       letter-spacing: -0.01em !important;
+    }
+
+    .project-title-link {
+      color: #f8fafc !important;
+      text-decoration: none !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      gap: 0.4rem !important;
+      transition: color 0.2s ease !important;
+    }
+
+    .project-title-link:hover {
+      color: var(--accent-green) !important;
+    }
+
+    .external-icon {
+      opacity: 0.6;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+
+    .project-title-link:hover .external-icon {
+      opacity: 1;
+      transform: translate(1px, -1px);
     }
 
     .lang-bar {
@@ -106,28 +129,33 @@
 
     <!-- Horizontal track of small project cards -->
     <div class="projects-track" id="projects-track">
-      <!-- Small Project Card 1 -->
-      <article class="project-card">
-        <h3 class="project-title">Personal Portfolio</h3>
+      <!-- Project Card 1: Live GitHub Repo (auto-fetches languages & description) -->
+      <article class="project-card" data-repo="baodata/baodata.github.io">
+        <h3 class="project-title">
+          <a href="https://github.com/baodata/baodata.github.io" target="_blank" rel="noopener noreferrer" class="project-title-link">
+            <span>baodata.github.io</span>
+            <svg class="external-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+          </a>
+        </h3>
         
-        <!-- Language breakdown bar -->
+        <!-- Language breakdown bar (auto-updated by projects.js) -->
         <div class="lang-bar">
-          <span class="lang-segment" style="width: 55%; background-color: #f1e05a;"></span>
-          <span class="lang-segment" style="width: 30%; background-color: #563d7c;"></span>
-          <span class="lang-segment" style="width: 15%; background-color: #e34c26;"></span>
+          <span class="lang-segment" style="width: 48%; background-color: #563d7c;" title="CSS"></span>
+          <span class="lang-segment" style="width: 29%; background-color: #e34c26;" title="HTML"></span>
+          <span class="lang-segment" style="width: 23%; background-color: #f1e05a;" title="JavaScript"></span>
         </div>
         <div class="lang-tags">
-          <span class="lang-tag"><span class="lang-dot" style="background-color: #f1e05a;"></span>JavaScript 55%</span>
-          <span class="lang-tag"><span class="lang-dot" style="background-color: #563d7c;"></span>CSS 30%</span>
-          <span class="lang-tag"><span class="lang-dot" style="background-color: #e34c26;"></span>HTML 15%</span>
+          <span class="lang-tag"><span class="lang-dot" style="background-color: #563d7c;"></span>CSS 48%</span>
+          <span class="lang-tag"><span class="lang-dot" style="background-color: #e34c26;"></span>HTML 29%</span>
+          <span class="lang-tag"><span class="lang-dot" style="background-color: #f1e05a;"></span>JavaScript 23%</span>
         </div>
 
         <p class="project-desc">
-          Minimalist personal portfolio built from scratch with dark mode, interactive physics, and modular components.
+          Personal developer portfolio built completely from scratch using vanilla HTML, CSS, and JavaScript.
         </p>
       </article>
 
-      <!-- Small Project Card 2 -->
+      <!-- Project Card 2 -->
       <article class="project-card">
         <h3 class="project-title">Data Pipeline Tool</h3>
         
@@ -146,7 +174,7 @@
         </p>
       </article>
 
-      <!-- Small Project Card 3 -->
+      <!-- Project Card 3 -->
       <article class="project-card">
         <h3 class="project-title">CLI Dev Utility</h3>
         
