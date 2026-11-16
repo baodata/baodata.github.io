@@ -3,35 +3,30 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>lữ bảo đạt</title>
-  <style>
-    /* RGB color cycling animation */
-    @keyframes rgbShift {
-      0% { color: #ff0000; }
-      17% { color: #ff8800; }
-      33% { color: #ffff00; }
-      50% { color: #00ff00; }
-      67% { color: #00ffff; }
-      83% { color: #0000ff; }
-      100% { color: #ff0000; }
-    }
-
-    body {
-      margin: 0;
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .rgb-text {
-      font-size: 3rem;
-      animation: rgbShift 1.5s linear infinite;
-      user-select: none;
-    }
-  </style>
+  <title>Lữ Bảo Đạt</title>
+  <link rel="icon" type="image/png" href="assets/images/floaters/logo.png?v=2">
+  <link rel="shortcut icon" type="image/png" href="assets/images/floaters/logo.png?v=2">
+  <link rel="stylesheet" href="assets/css/style.css?v=2">
 </head>
 <body>
-  <div class="rgb-text">lữ bảo đạt</div>
+  <!-- Interactive green mouse glow -->
+  <div class="mouse-glow"></div>
+
+  <!-- Background floating logos -->
+  <div id="floaters-container" class="floaters-container"></div>
+
+  <!-- Modular component placeholders -->
+  <div data-include="components/header.html"></div>
+  <div data-include="components/hero.html"></div>
+  <div data-include="components/about.html"></div>
+  <div data-include="components/projects.html"></div>
+  <div data-include="components/contact.html"></div>
+  <div data-include="components/footer.html"></div>
+
+  <!-- Scripts -->
+  <script src="assets/js/loader.js?v=2"></script>
+  <script src="assets/js/glow.js"></script>
+  <script src="assets/js/floaters.js"></script>
+  <script src="assets/js/main.js"></script>
 </body>
 </html>
