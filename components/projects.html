@@ -2,6 +2,48 @@
 <section class="section" id="projects">
   <style>
     /* Scoped styles for horizontal project cards */
+    .projects-header {
+      display: flex !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+      width: 100% !important;
+      margin-bottom: 0.5rem !important;
+    }
+
+    .carousel-nav {
+      display: inline-flex !important;
+      align-items: center !important;
+      gap: 0.5rem !important;
+    }
+
+    .carousel-nav-btn {
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      width: 36px !important;
+      height: 36px !important;
+      border-radius: 50% !important;
+      background: rgba(18, 26, 23, 0.85) !important;
+      border: 1px solid rgba(16, 185, 129, 0.3) !important;
+      color: #94a3b8 !important;
+      cursor: pointer !important;
+      transition: all 0.2s ease !important;
+      outline: none !important;
+      padding: 0 !important;
+    }
+
+    .carousel-nav-btn:hover {
+      color: var(--accent-green) !important;
+      border-color: var(--accent-green) !important;
+      background: rgba(16, 185, 129, 0.15) !important;
+      transform: translateY(-1px) scale(1.05) !important;
+      box-shadow: 0 0 12px rgba(16, 185, 129, 0.25) !important;
+    }
+
+    .carousel-nav-btn:active {
+      transform: translateY(0) scale(0.95) !important;
+    }
+
     .projects-track {
       display: flex !important;
       flex-direction: row !important;
@@ -10,15 +52,25 @@
       max-width: 100% !important;
       min-width: 0 !important;
       overflow-x: auto !important;
-      scroll-snap-type: x mandatory !important;
       padding: 0.5rem 0.25rem 1rem 0.25rem !important;
       scrollbar-width: none !important;
       -ms-overflow-style: none !important;
       -webkit-overflow-scrolling: touch !important;
+      cursor: grab !important;
+      user-select: none !important;
     }
 
     .projects-track::-webkit-scrollbar {
       display: none !important;
+    }
+
+    .projects-track.is-dragging {
+      cursor: grabbing !important;
+      scroll-behavior: auto !important;
+    }
+
+    .projects-track.is-dragging .project-card {
+      pointer-events: none !important;
     }
 
     .project-card {
@@ -123,73 +175,74 @@
   </style>
 
   <div class="section-card">
-    <div class="section-header">
+    <div class="section-header projects-header">
       <h2 class="section-title">Projects</h2>
+      <div class="carousel-nav">
+        <button type="button" class="carousel-nav-btn" id="projects-prev" aria-label="Previous Project">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+        </button>
+        <button type="button" class="carousel-nav-btn" id="projects-next" aria-label="Next Project">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        </button>
+      </div>
     </div>
 
     <!-- Horizontal track of small project cards -->
     <div class="projects-track" id="projects-track">
-      <!-- Project Card 1: Live GitHub Repo (auto-fetches languages & description) -->
+      <!-- Project Card 1: This website -->
       <article class="project-card" data-repo="baodata/baodata.github.io">
         <h3 class="project-title">
           <a href="https://github.com/baodata/baodata.github.io" target="_blank" rel="noopener noreferrer" class="project-title-link">
-            <span>baodata.github.io</span>
+            <span>This website</span>
             <svg class="external-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
           </a>
         </h3>
         
         <!-- Language breakdown bar (auto-updated by projects.js) -->
         <div class="lang-bar">
-          <span class="lang-segment" style="width: 48%; background-color: #563d7c;" title="CSS"></span>
-          <span class="lang-segment" style="width: 29%; background-color: #e34c26;" title="HTML"></span>
-          <span class="lang-segment" style="width: 23%; background-color: #f1e05a;" title="JavaScript"></span>
         </div>
         <div class="lang-tags">
-          <span class="lang-tag"><span class="lang-dot" style="background-color: #563d7c;"></span>CSS 48%</span>
-          <span class="lang-tag"><span class="lang-dot" style="background-color: #e34c26;"></span>HTML 29%</span>
-          <span class="lang-tag"><span class="lang-dot" style="background-color: #f1e05a;"></span>JavaScript 23%</span>
         </div>
 
         <p class="project-desc">
-          Personal developer portfolio built completely from scratch using vanilla HTML, CSS, and JavaScript.
         </p>
       </article>
 
-      <!-- Project Card 2 -->
-      <article class="project-card">
-        <h3 class="project-title">Data Pipeline Tool</h3>
+      <!-- Project Card 2:Pikachu -->
+      <article class="project-card" data-repo="baodata/phikachuuuu">
+        <h3 class="project-title">
+          <a href="https://github.com/baodata/phikachuuuu" target="_blank" rel="noopener noreferrer" class="project-title-link">
+            <span>Pikachu</span>
+            <svg class="external-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+          </a>
+        </h3>
         
-        <!-- Language breakdown bar -->
+        <!-- Language breakdown bar (auto-updated by projects.js) -->
         <div class="lang-bar">
-          <span class="lang-segment" style="width: 75%; background-color: #3572A5;"></span>
-          <span class="lang-segment" style="width: 25%; background-color: #e38c00;"></span>
         </div>
         <div class="lang-tags">
-          <span class="lang-tag"><span class="lang-dot" style="background-color: #3572A5;"></span>Python 75%</span>
-          <span class="lang-tag"><span class="lang-dot" style="background-color: #e38c00;"></span>SQL 25%</span>
         </div>
 
         <p class="project-desc">
-          Automated data transformation and metrics collection pipeline designed for quick query analytics.
         </p>
       </article>
 
-      <!-- Project Card 3 -->
-      <article class="project-card">
-        <h3 class="project-title">CLI Dev Utility</h3>
+      <!-- Project Card 3:labaodutCrypto -->
+      <article class="project-card" data-repo="baodata/labaodutCrypto">
+        <h3 class="project-title">
+          <a href="https://github.com/baodata/labaodutCrypto" target="_blank" rel="noopener noreferrer" class="project-title-link">
+            <span>Trading bots</span>
+            <svg class="external-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+          </a>
+        </h3>
         
-        <!-- Language breakdown bar -->
+        <!-- Language breakdown bar (auto-updated by projects.js) -->
         <div class="lang-bar">
-          <span class="lang-segment" style="width: 85%; background-color: #00ADD8;"></span>
-          <span class="lang-segment" style="width: 15%; background-color: #89e051;"></span>
         </div>
         <div class="lang-tags">
-          <span class="lang-tag"><span class="lang-dot" style="background-color: #00ADD8;"></span>Go 85%</span>
-          <span class="lang-tag"><span class="lang-dot" style="background-color: #89e051;"></span>Shell 15%</span>
         </div>
 
         <p class="project-desc">
-          Command-line tool facilitating local environment setups, file monitoring, and rapid project scaffolding.
         </p>
       </article>
     </div>
