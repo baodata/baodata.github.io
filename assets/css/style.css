@@ -82,11 +82,20 @@ body {
   user-select: none;
   display: flex;
   align-items: center;
+  gap: 0.65rem;
   transition: opacity 0.2s ease;
 }
 
 .logo:hover {
   opacity: 0.9;
+}
+
+.logo-icon {
+  width: 26px;
+  height: 26px;
+  object-fit: contain;
+  border-radius: 6px;
+  filter: drop-shadow(0 0 6px rgba(16, 185, 129, 0.3));
 }
 
 .logo .accent-word {
@@ -136,10 +145,10 @@ body {
 .hero-card {
   max-width: 680px;
   width: 100%;
-  text-align: center;
+  text-align: left;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
   padding: 3.5rem 2.5rem;
   border-radius: 28px;
   background: rgba(11, 15, 14, 0.75);
@@ -323,10 +332,10 @@ body {
 .section-card {
   max-width: 680px;
   width: 100%;
-  text-align: center;
+  text-align: left;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
   padding: 3.5rem 2.5rem;
   border-radius: 28px;
   background: rgba(11, 15, 14, 0.75);
@@ -346,7 +355,8 @@ body {
   margin-bottom: 2rem;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
+  width: 100%;
 }
 
 .section-title {
@@ -355,6 +365,23 @@ body {
   letter-spacing: -0.01em;
   color: var(--text-primary);
   margin-top: 0.5rem;
+}
+
+/* About text styling */
+.about-text {
+  font-size: 1.15rem;
+  line-height: 1.85;
+  color: var(--text-muted);
+  text-align: left;
+  width: 100%;
+  max-width: 540px;
+}
+
+.about-punchline {
+  display: inline-block;
+  margin-top: 0.5rem;
+  color: var(--text-primary);
+  font-style: italic;
 }
 
 /* Placeholder box */
@@ -366,7 +393,7 @@ body {
   border: 1px dashed rgba(16, 185, 129, 0.4);
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
 }
 
 .placeholder-text {

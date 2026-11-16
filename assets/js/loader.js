@@ -1,10 +1,12 @@
 // Component loader: fetches HTML fragments and replaces placeholder elements
 async function loadComponents() {
   const targets = document.querySelectorAll('[data-include]');
+  const cacheBuster = Date.now();
   const tasks = Array.from(targets).map(async (element) => {
     const filePath = element.getAttribute('data-include');
     try {
-      const response = await fetch(filePath);
+      // Prevent browser from caching components during local development
+      const response = await fetch(`${filePath}?_=${cacheBuster}`, { cache: 'no-cache' });
       if (!response.ok) {
         throw new Error(`Failed to load ${filePath}: ${response.statusText}`);
       }
