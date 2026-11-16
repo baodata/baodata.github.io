@@ -25,6 +25,7 @@ baodata.github.io/
     │   ├── loader.js           # Lightweight dynamic component loader
     │   ├── glow.js             # Mouse glow tracking logic
     │   ├── floaters.js         # Floating logo physics & boundary collision
+    │   ├── carousel.js         # Projects horizontal drag & glide carousel
     │   └── main.js             # Entry point for general interactions
     ├── images/
     │   └── projects/           # Screenshots and media assets
