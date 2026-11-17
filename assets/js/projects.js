@@ -22,12 +22,6 @@ const repoDataCache = new Map();
 function renderRepoCard(card, { repoData, langData }) {
   if (!card) return;
 
-  // Update repository description
-  const descEl = card.querySelector('.project-desc');
-  if (descEl && repoData.description) {
-    descEl.textContent = repoData.description;
-  }
-
   // Update repository hyperlink
   const linkEl = card.querySelector('.project-title-link');
   if (linkEl && repoData.html_url) {
@@ -37,34 +31,66 @@ function renderRepoCard(card, { repoData, langData }) {
   // Compute language percentage breakdown
   const totalBytes = Object.values(langData).reduce((sum, bytes) => sum + bytes, 0);
   if (totalBytes > 0) {
-    const langBar = card.querySelector('.lang-bar');
-    const langTags = card.querySelector('.lang-tags');
+    let langBar = card.querySelector('.lang-bar');
+    let langTags = card.querySelector('.lang-tags');
 
-    if (langBar && langTags) {
-      langBar.innerHTML = '';
-      langTags.innerHTML = '';
-
-      Object.entries(langData).forEach(([lang, bytes]) => {
-        const percent = ((bytes / totalBytes) * 100).toFixed(1);
-        if (parseFloat(percent) < 1.0) return; // Skip negligible < 1%
-
-        const color = GITHUB_LANG_COLORS[lang] || '#10b981';
-
-        // Add colored progress bar segment
-        const segment = document.createElement('span');
-        segment.className = 'lang-segment';
-        segment.style.width = `${percent}%`;
-        segment.style.backgroundColor = color;
-        segment.title = `${lang}: ${percent}%`;
-        langBar.appendChild(segment);
-
-        // Add tag label below progress bar
-        const tag = document.createElement('span');
-        tag.className = 'lang-tag';
-        tag.innerHTML = `<span class="lang-dot" style="background-color: ${color};"></span>${lang} ${percent}%`;
-        langTags.appendChild(tag);
-      });
+    // Create .lang-bar dynamically if not present
+    if (!langBar) {
+      langBar = document.createElement('div');
+      langBar.className = 'lang-bar';
+      const titleEl = card.querySelector('.project-title');
+      if (titleEl && titleEl.nextSibling) {
+        card.insertBefore(langBar, titleEl.nextSibling);
+      } else {
+        card.appendChild(langBar);
+      }
     }
+
+    // Create .lang-tags dynamically if not present
+    if (!langTags) {
+      langTags = document.createElement('div');
+      langTags.className = 'lang-tags';
+      if (langBar.nextSibling) {
+        card.insertBefore(langTags, langBar.nextSibling);
+      } else {
+        card.appendChild(langTags);
+      }
+    }
+
+    langBar.innerHTML = '';
+    langTags.innerHTML = '';
+
+    Object.entries(langData).forEach(([lang, bytes]) => {
+      const percent = ((bytes / totalBytes) * 100).toFixed(1);
+      if (parseFloat(percent) < 1.0) return; // Skip negligible < 1%
+
+      const color = GITHUB_LANG_COLORS[lang] || '#10b981';
+
+      // Add colored progress bar segment
+      const segment = document.createElement('span');
+      segment.className = 'lang-segment';
+      segment.style.width = `${percent}%`;
+      segment.style.backgroundColor = color;
+      segment.title = `${lang}: ${percent}%`;
+      langBar.appendChild(segment);
+
+      // Add tag label below progress bar
+      const tag = document.createElement('span');
+      tag.className = 'lang-tag';
+      tag.innerHTML = `<span class="lang-dot" style="background-color: ${color};"></span>${lang} ${percent}%`;
+      langTags.appendChild(tag);
+    });
+  }
+
+  // Update or create repository description
+  if (repoData.description) {
+    let descEl = card.querySelector('.project-desc');
+    if (!descEl) {
+      descEl = document.createElement('p');
+      descEl.className = 'project-desc';
+      card.appendChild(descEl);
+    }
+    descEl.textContent = repoData.description;
   }
 }
 
@@ -338,8 +364,8 @@ function initProjectsCarousel() {
 
 // Master initialization
 async function setupProjects() {
-  initProjectsCarousel();
   await fetchAllRepoData();
+  initProjectsCarousel();
 }
 
 // Trigger setup on component loader event and DOMContentLoaded
