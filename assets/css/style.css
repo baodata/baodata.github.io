@@ -385,15 +385,29 @@ body {
   gap: 1.25rem;
   width: 100%;
   overflow-x: auto;
-  scroll-snap-type: x mandatory;
   padding: 0.5rem 0.25rem 1rem 0.25rem;
   scrollbar-width: none;
   -ms-overflow-style: none;
   -webkit-overflow-scrolling: touch;
+  cursor: grab;
+  user-select: none;
+  touch-action: pan-y;
 }
 
 .projects-track::-webkit-scrollbar {
   display: none;
+}
+
+.projects-track.is-dragging {
+  cursor: grabbing;
+  scroll-behavior: auto;
+  scroll-snap-type: none;
+}
+
+.projects-track.is-dragging .project-card {
+  pointer-events: none;
+  transition: none;
+  transform: none;
 }
 
 /* Individual small project card with clear border */
@@ -401,17 +415,17 @@ body {
   flex: 0 0 280px;
   min-width: 280px;
   max-width: 280px;
-  scroll-snap-align: start;
   padding: 1.6rem 1.4rem;
   border-radius: 20px;
   background: rgba(255, 255, 255, 0.035);
   border: 1px solid rgba(16, 185, 129, 0.3);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
-  transition: all 0.25s ease;
+  transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   text-align: left;
+  will-change: transform;
 }
 
 .project-card:hover {
