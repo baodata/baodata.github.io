@@ -17,7 +17,7 @@
   --accent-green-subtle: rgba(5, 150, 105, 0.05);
 
   /* Card layout sizing */
-  --card-max-width: 860px;
+  --card-max-width: 980px;
 
   /* Mouse coordinates for glow effect */
   --mouse-x: -1000px;
