@@ -164,165 +164,6 @@ body {
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4), 0 0 32px rgba(16, 185, 129, 0.16);
 }
 
-/* Live status bar */
-.status-bar {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-  margin-bottom: 1.5rem;
-}
-
-.status-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.35rem 0.85rem;
-  border-radius: 9999px;
-  background: rgba(16, 185, 129, 0.08);
-  border: 1px solid rgba(16, 185, 129, 0.25);
-  font-size: 0.85rem;
-  font-weight: 500;
-  color: var(--text-muted);
-  text-decoration: none;
-  transition: all 0.25s ease;
-  user-select: none;
-}
-
-.status-badge:hover {
-  border-color: rgba(16, 185, 129, 0.5);
-  transform: translateY(-1px);
-}
-
-.status-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background-color: #6b7280;
-  transition: all 0.3s ease;
-}
-
-/* Status variants */
-.status-dot.status-online {
-  background-color: var(--accent-green);
-  box-shadow: 0 0 8px var(--accent-green);
-  animation: pulse 2s infinite ease-in-out;
-}
-
-.status-dot.status-idle {
-  background-color: #f59e0b;
-  box-shadow: 0 0 8px rgba(245, 158, 11, 0.6);
-  animation: pulse 2.5s infinite ease-in-out;
-}
-
-.status-dot.status-dnd {
-  background-color: #ef4444;
-  box-shadow: 0 0 8px rgba(239, 68, 68, 0.6);
-  animation: none;
-}
-
-.status-dot.status-offline {
-  background-color: #6b7280;
-  box-shadow: none;
-  animation: none;
-}
-
-@keyframes pulse {
-  0%, 100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.45;
-    transform: scale(0.85);
-  }
-}
-
-/* Spotify Live Badge */
-.spotify-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.55rem;
-  padding: 0.35rem 0.85rem;
-  border-radius: 9999px;
-  background: rgba(29, 185, 84, 0.1);
-  border: 1px solid rgba(29, 185, 84, 0.3);
-  font-size: 0.85rem;
-  color: #ffffff;
-  text-decoration: none;
-  max-width: 380px;
-  transition: all 0.25s ease;
-  user-select: none;
-}
-
-.spotify-badge:hover {
-  background: rgba(29, 185, 84, 0.18);
-  border-color: rgba(29, 185, 84, 0.55);
-  box-shadow: 0 0 16px rgba(29, 185, 84, 0.2);
-  transform: translateY(-1px);
-}
-
-.spotify-icon-wrap {
-  display: flex;
-  align-items: center;
-  color: #1db954;
-}
-
-/* Animated 3-bar equalizer */
-.spotify-visualizer {
-  display: flex;
-  align-items: flex-end;
-  gap: 2px;
-  height: 12px;
-  width: 10px;
-}
-
-.spotify-visualizer span {
-  width: 2px;
-  background-color: #1db954;
-  border-radius: 1px;
-  animation: eqBounce 1.2s ease-in-out infinite alternate;
-}
-
-.spotify-visualizer span:nth-child(1) { height: 40%; animation-delay: 0s; }
-.spotify-visualizer span:nth-child(2) { height: 95%; animation-delay: 0.2s; }
-.spotify-visualizer span:nth-child(3) { height: 60%; animation-delay: 0.4s; }
-
-@keyframes eqBounce {
-  0% { height: 25%; }
-  100% { height: 100%; }
-}
-
-.spotify-details {
-  display: flex;
-  align-items: center;
-  gap: 0.35rem;
-  overflow: hidden;
-  white-space: nowrap;
-  font-size: 0.85rem;
-}
-
-.spotify-song {
-  font-weight: 500;
-  color: #ffffff;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 160px;
-}
-
-.spotify-artist {
-  color: var(--text-muted);
-  font-size: 0.8rem;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 120px;
-}
-
-.spotify-artist::before {
-  content: "•";
-  margin-right: 0.35rem;
-}
-
 .hero-title {
   font-size: clamp(2.2rem, 5vw, 3.5rem);
   font-weight: 700;
@@ -518,90 +359,54 @@ body {
   font-style: italic;
 }
 
-/* Projects Section & Carousel */
-.projects-header {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
+/* Placeholder box */
+.placeholder-box {
   width: 100%;
-  margin-bottom: 1.5rem;
-}
-
-.carousel-nav {
-  display: inline-flex;
+  padding: 2.5rem 1.5rem;
+  border-radius: 18px;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px dashed rgba(16, 185, 129, 0.4);
+  display: flex;
   align-items: center;
-  gap: 0.5rem;
+  justify-content: flex-start;
 }
 
-.carousel-nav-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background: rgba(18, 26, 23, 0.85);
-  border: 1px solid rgba(16, 185, 129, 0.3);
-  color: #94a3b8;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  outline: none;
-  padding: 0;
-}
-
-.carousel-nav-btn:hover {
+.placeholder-text {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 1.15rem;
   color: var(--accent-green);
-  border-color: var(--accent-green);
-  background: rgba(16, 185, 129, 0.15);
-  transform: translateY(-1px) scale(1.05);
-  box-shadow: 0 0 12px rgba(16, 185, 129, 0.25);
+  letter-spacing: 0.06em;
 }
 
-.carousel-nav-btn:active {
-  transform: translateY(0) scale(0.95);
-}
-
+/* Horizontal projects track inside the main card */
 .projects-track {
   display: flex;
   flex-direction: row;
   gap: 1.25rem;
   width: 100%;
-  max-width: 100%;
-  min-width: 0;
   overflow-x: auto;
+  scroll-snap-type: x mandatory;
   padding: 0.5rem 0.25rem 1rem 0.25rem;
   scrollbar-width: none;
   -ms-overflow-style: none;
   -webkit-overflow-scrolling: touch;
-  cursor: grab;
-  user-select: none;
 }
 
 .projects-track::-webkit-scrollbar {
   display: none;
 }
 
-.projects-track.is-dragging {
-  cursor: grabbing;
-  scroll-behavior: auto;
-}
-
-.projects-track.is-dragging .project-card {
-  pointer-events: none;
-}
-
+/* Individual small project card with clear border */
 .project-card {
   flex: 0 0 280px;
   min-width: 280px;
   max-width: 280px;
-  min-height: 230px;
   scroll-snap-align: start;
   padding: 1.6rem 1.4rem;
   border-radius: 20px;
-  background: rgba(18, 26, 23, 0.85);
-  border: 1.5px solid rgba(16, 185, 129, 0.35);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+  background: rgba(255, 255, 255, 0.035);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
   transition: all 0.25s ease;
   display: flex;
   flex-direction: column;
@@ -611,49 +416,27 @@ body {
 
 .project-card:hover {
   border-color: var(--accent-green);
-  background: rgba(16, 185, 129, 0.08);
+  background: rgba(16, 185, 129, 0.06);
   transform: translateY(-3px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45), 0 0 16px rgba(16, 185, 129, 0.2);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4), 0 0 16px rgba(16, 185, 129, 0.15);
 }
 
 .project-title {
-  font-size: 1.2rem;
+  font-size: 1.25rem;
   font-weight: 600;
-  color: #f8fafc;
+  color: var(--text-primary);
   margin-bottom: 0.85rem;
   letter-spacing: -0.01em;
 }
 
-.project-title-link {
-  color: #f8fafc;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  transition: color 0.2s ease;
-}
-
-.project-title-link:hover {
-  color: var(--accent-green);
-}
-
-.external-icon {
-  opacity: 0.6;
-  transition: opacity 0.2s ease, transform 0.2s ease;
-}
-
-.project-title-link:hover .external-icon {
-  opacity: 1;
-  transform: translate(1px, -1px);
-}
-
+/* GitHub-style language progress bar */
 .lang-bar {
   display: flex;
-  height: 7px;
+  height: 6px;
   width: 100%;
   border-radius: 9999px;
   overflow: hidden;
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: rgba(255, 255, 255, 0.08);
   margin-bottom: 0.75rem;
 }
 
@@ -661,6 +444,7 @@ body {
   height: 100%;
 }
 
+/* Language pill tags */
 .lang-tags {
   display: flex;
   flex-wrap: wrap;
@@ -671,58 +455,24 @@ body {
 .lang-tag {
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
+  gap: 0.38rem;
   font-size: 0.8rem;
-  color: #94a3b8;
+  color: var(--text-muted);
   user-select: none;
 }
 
 .lang-dot {
-  display: inline-block;
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  flex-shrink: 0;
 }
 
+/* Project description */
 .project-desc {
   font-size: 0.95rem;
   line-height: 1.6;
-  color: #94a3b8;
+  color: var(--text-muted);
   margin: 0;
-}
-
-/* Carousel pagination dots */
-.carousel-dots {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 0.6rem;
-  width: 100%;
-  margin-top: 1.25rem;
-}
-
-.carousel-dot {
-  width: 9px;
-  height: 9px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.18);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  cursor: pointer;
-  padding: 0;
-  outline: none;
-  transition: all 0.25s ease;
-}
-
-.carousel-dot.active {
-  background: var(--accent-green);
-  border-color: var(--accent-green);
-  box-shadow: 0 0 10px rgba(16, 185, 129, 0.8), 0 0 4px var(--accent-green);
-  transform: scale(1.2);
-}
-
-.carousel-dot:hover:not(.active) {
-  background: rgba(255, 255, 255, 0.35);
 }
 
 @media (max-width: 640px) {

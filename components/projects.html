@@ -1,5 +1,214 @@
 <!-- Projects Section -->
 <section class="section" id="projects">
+  <style>
+    /* Scoped styles for horizontal project cards */
+    .projects-header {
+      display: flex !important;
+      flex-direction: row !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+      width: 100% !important;
+      margin-bottom: 1.5rem !important;
+    }
+
+    .carousel-nav {
+      display: inline-flex !important;
+      align-items: center !important;
+      gap: 0.5rem !important;
+    }
+
+    .carousel-nav-btn {
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      width: 36px !important;
+      height: 36px !important;
+      border-radius: 50% !important;
+      background: rgba(18, 26, 23, 0.85) !important;
+      border: 1px solid rgba(16, 185, 129, 0.3) !important;
+      color: #94a3b8 !important;
+      cursor: pointer !important;
+      transition: all 0.2s ease !important;
+      outline: none !important;
+      padding: 0 !important;
+    }
+
+    .carousel-nav-btn:hover {
+      color: var(--accent-green) !important;
+      border-color: var(--accent-green) !important;
+      background: rgba(16, 185, 129, 0.15) !important;
+      transform: translateY(-1px) scale(1.05) !important;
+      box-shadow: 0 0 12px rgba(16, 185, 129, 0.25) !important;
+    }
+
+    .carousel-nav-btn:active {
+      transform: translateY(0) scale(0.95) !important;
+    }
+
+    .projects-track {
+      display: flex !important;
+      flex-direction: row !important;
+      gap: 1.25rem !important;
+      width: 100% !important;
+      max-width: 100% !important;
+      min-width: 0 !important;
+      overflow-x: auto !important;
+      padding: 0.5rem 0.25rem 1rem 0.25rem !important;
+      scrollbar-width: none !important;
+      -ms-overflow-style: none !important;
+      -webkit-overflow-scrolling: touch !important;
+      cursor: grab !important;
+      user-select: none !important;
+    }
+
+    .projects-track::-webkit-scrollbar {
+      display: none !important;
+    }
+
+    .projects-track.is-dragging {
+      cursor: grabbing !important;
+      scroll-behavior: auto !important;
+    }
+
+    .projects-track.is-dragging .project-card {
+      pointer-events: none !important;
+    }
+
+    .project-card {
+      flex: 0 0 280px !important;
+      min-width: 280px !important;
+      max-width: 280px !important;
+      min-height: 230px !important;
+      scroll-snap-align: start !important;
+      padding: 1.6rem 1.4rem !important;
+      border-radius: 20px !important;
+      background: rgba(18, 26, 23, 0.85) !important;
+      border: 1.5px solid rgba(16, 185, 129, 0.35) !important;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35) !important;
+      transition: all 0.25s ease !important;
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: flex-start !important;
+      text-align: left !important;
+    }
+
+    .project-card:hover {
+      border-color: var(--accent-green) !important;
+      background: rgba(16, 185, 129, 0.08) !important;
+      transform: translateY(-3px) !important;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45), 0 0 16px rgba(16, 185, 129, 0.2) !important;
+    }
+
+    .project-title {
+      font-size: 1.2rem !important;
+      font-weight: 600 !important;
+      color: #f8fafc !important;
+      margin-bottom: 0.85rem !important;
+      letter-spacing: -0.01em !important;
+    }
+
+    .project-title-link {
+      color: #f8fafc !important;
+      text-decoration: none !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      gap: 0.4rem !important;
+      transition: color 0.2s ease !important;
+    }
+
+    .project-title-link:hover {
+      color: var(--accent-green) !important;
+    }
+
+    .external-icon {
+      opacity: 0.6;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+
+    .project-title-link:hover .external-icon {
+      opacity: 1;
+      transform: translate(1px, -1px);
+    }
+
+    .lang-bar {
+      display: flex !important;
+      height: 7px !important;
+      width: 100% !important;
+      border-radius: 9999px !important;
+      overflow: hidden !important;
+      background-color: rgba(255, 255, 255, 0.1) !important;
+      margin-bottom: 0.75rem !important;
+    }
+
+    .lang-segment {
+      height: 100% !important;
+    }
+
+    .lang-tags {
+      display: flex !important;
+      flex-wrap: wrap !important;
+      gap: 0.85rem !important;
+      margin-bottom: 0.85rem !important;
+    }
+
+    .lang-tag {
+      display: inline-flex !important;
+      align-items: center !important;
+      gap: 0.4rem !important;
+      font-size: 0.8rem !important;
+      color: #94a3b8 !important;
+      user-select: none !important;
+    }
+
+    .lang-dot {
+      display: inline-block !important;
+      width: 8px !important;
+      height: 8px !important;
+      border-radius: 50% !important;
+      flex-shrink: 0 !important;
+    }
+
+    .project-desc {
+      font-size: 0.95rem !important;
+      line-height: 1.6 !important;
+      color: #94a3b8 !important;
+      margin: 0 !important;
+    }
+
+    /* Carousel pagination dots */
+    .carousel-dots {
+      display: flex !important;
+      justify-content: center !important;
+      align-items: center !important;
+      gap: 0.6rem !important;
+      width: 100% !important;
+      margin-top: 1.25rem !important;
+    }
+
+    .carousel-dot {
+      width: 9px !important;
+      height: 9px !important;
+      border-radius: 50% !important;
+      background: rgba(255, 255, 255, 0.18) !important;
+      border: 1px solid rgba(255, 255, 255, 0.08) !important;
+      cursor: pointer !important;
+      padding: 0 !important;
+      outline: none !important;
+      transition: all 0.25s ease !important;
+    }
+
+    .carousel-dot.active {
+      background: var(--accent-green) !important;
+      border-color: var(--accent-green) !important;
+      box-shadow: 0 0 10px rgba(16, 185, 129, 0.8), 0 0 4px var(--accent-green) !important;
+      transform: scale(1.2) !important;
+    }
+
+    .carousel-dot:hover:not(.active) {
+      background: rgba(255, 255, 255, 0.35) !important;
+    }
+  </style>
+
   <div class="section-card">
     <div class="section-header projects-header">
       <h2 class="section-title">Projects</h2>
@@ -13,10 +222,63 @@
       </div>
     </div>
 
-    <!-- Horizontal track dynamically populated by projects.js -->
-    <div class="projects-track" id="projects-track"></div>
+    <!-- Horizontal track of small project cards -->
+    <div class="projects-track" id="projects-track">
+      <!-- Project Card 1: This website -->
+      <article class="project-card" data-repo="baodata/baodata.github.io" data-index="0">
+        <h3 class="project-title">
+          <a href="https://github.com/baodata/baodata.github.io" target="_blank" rel="noopener noreferrer" class="project-title-link">
+            <span>This website</span>
+            <svg class="external-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+          </a>
+        </h3>
+      </article>
 
-    <!-- Carousel indicator dots dynamically populated by projects.js -->
+      <!-- Project Card 2: Pikachu -->
+      <article class="project-card" data-repo="baodata/phikachuuuu" data-index="1">
+        <h3 class="project-title">
+          <a href="https://github.com/baodata/phikachuuuu" target="_blank" rel="noopener noreferrer" class="project-title-link">
+            <span>Pikachu</span>
+            <svg class="external-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+          </a>
+        </h3>
+      </article>
+
+      <!-- Project Card 3: Trading bots -->
+      <article class="project-card" data-repo="baodata/labaodutCrypto" data-index="2">
+        <h3 class="project-title">
+          <a href="https://github.com/baodata/labaodutCrypto" target="_blank" rel="noopener noreferrer" class="project-title-link">
+            <span>Trading bots</span>
+            <svg class="external-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+          </a>
+        </h3>
+      </article>
+
+      <!-- Project Card 4: Placeholder -->
+      <article class="project-card" data-index="3">
+        <h3 class="project-title">
+          <span class="project-title-link">
+            <span>Dummy</span>
+          </span>
+        </h3>
+        
+        <!-- Language breakdown bar -->
+        <div class="lang-bar">
+          <span class="lang-segment" style="width: 60%; background-color: #3178c6;" title="Line 1: 60%"></span>
+          <span class="lang-segment" style="width: 40%; background-color: #dea584;" title="Line 2: 40%"></span>
+        </div>
+        <div class="lang-tags">
+          <span class="lang-tag"><span class="lang-dot" style="background-color: #3178c6;"></span>Line 1: 60%</span>
+          <span class="lang-tag"><span class="lang-dot" style="background-color: #dea584;"></span>Line 2: 40%</span>
+        </div>
+
+        <p class="project-desc">
+          This is what my forth project would look like, if I had one.
+        </p>
+      </article>
+    </div>
+
+    <!-- Dots indicator below cards -->
     <div class="carousel-dots" id="projects-dots"></div>
   </div>
 </section>
