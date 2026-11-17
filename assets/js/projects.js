@@ -114,19 +114,23 @@ function initProjectsCarousel() {
 
   track.dataset.carouselInit = 'true';
 
-  // Prepend clones of the set (for infinite left scrolling)
-  originalCards.slice().reverse().forEach(card => {
-    const clone = card.cloneNode(true);
-    clone.classList.add('is-clone');
-    track.prepend(clone);
-  });
+  // Prepend 2 clone sets (for ample infinite left scroll buffer)
+  for (let s = 0; s < 2; s++) {
+    originalCards.slice().reverse().forEach(card => {
+      const clone = card.cloneNode(true);
+      clone.classList.add('is-clone');
+      track.prepend(clone);
+    });
+  }
 
-  // Append clones of the set (for infinite right scrolling)
-  originalCards.forEach(card => {
-    const clone = card.cloneNode(true);
-    clone.classList.add('is-clone');
-    track.appendChild(clone);
-  });
+  // Append 2 clone sets (for ample infinite right scroll buffer)
+  for (let s = 0; s < 2; s++) {
+    originalCards.forEach(card => {
+      const clone = card.cloneNode(true);
+      clone.classList.add('is-clone');
+      track.appendChild(clone);
+    });
+  }
 
   // Calculate width of one card + gap
   function getCardStep() {
@@ -143,23 +147,29 @@ function initProjectsCarousel() {
   }
 
   // Normalize position to maintain infinite seamless loop
-  function checkInfiniteWrap() {
+  function normalizeScroll() {
     const setWidth = getSetWidth();
     if (setWidth <= 0) return;
 
-    if (track.scrollLeft >= setWidth * 2) {
+    // Buffer range: [setWidth, 3 * setWidth)
+    if (track.scrollLeft >= 3 * setWidth) {
       track.scrollLeft -= setWidth;
     } else if (track.scrollLeft < setWidth) {
       track.scrollLeft += setWidth;
     }
   }
 
-  // Set initial scroll position to the start of the middle set
-  const initialSetWidth = getSetWidth();
-  track.scrollLeft = initialSetWidth;
-  requestAnimationFrame(() => {
-    track.scrollLeft = getSetWidth();
-  });
+  // Set initial scroll position to the center set (index 2 of 5 sets)
+  function resetToCenter() {
+    const setWidth = getSetWidth();
+    if (setWidth > 0) {
+      track.scrollLeft = setWidth * 2;
+    }
+  }
+
+  resetToCenter();
+  requestAnimationFrame(resetToCenter);
+  setTimeout(resetToCenter, 100);
 
   // Setup Next & Prev buttons
   const prevBtn = document.getElementById('projects-prev');
@@ -169,7 +179,7 @@ function initProjectsCarousel() {
     nextBtn.addEventListener('click', () => {
       const step = getCardStep();
       const setWidth = getSetWidth();
-      if (track.scrollLeft >= setWidth * 2 - step) {
+      if (track.scrollLeft >= 3 * setWidth - step) {
         track.scrollLeft -= setWidth;
       }
       track.scrollBy({ left: step, behavior: 'smooth' });
@@ -204,7 +214,7 @@ function initProjectsCarousel() {
     if (!isDown) return;
     isDown = false;
     track.classList.remove('is-dragging');
-    checkInfiniteWrap();
+    normalizeScroll();
   });
 
   track.addEventListener('mousemove', (e) => {
@@ -222,7 +232,7 @@ function initProjectsCarousel() {
     const setWidth = getSetWidth();
 
     // Wrap dynamically during continuous dragging
-    if (newScrollLeft >= setWidth * 2) {
+    if (newScrollLeft >= 3 * setWidth) {
       newScrollLeft -= setWidth;
       scrollStart -= setWidth;
     } else if (newScrollLeft < setWidth) {
@@ -244,13 +254,13 @@ function initProjectsCarousel() {
   // Passive listener for touch/wheel scroll wrap
   let scrollTimeout = null;
   track.addEventListener('scroll', () => {
-    if (isDown) return; // Handled directly in mousemove
+    if (isDown) return;
     clearTimeout(scrollTimeout);
-    scrollTimeout = setTimeout(checkInfiniteWrap, 60);
+    scrollTimeout = setTimeout(normalizeScroll, 80);
   }, { passive: true });
 
   window.addEventListener('resize', () => {
-    checkInfiniteWrap();
+    normalizeScroll();
   });
 }
 

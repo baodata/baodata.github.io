@@ -4,10 +4,11 @@
     /* Scoped styles for horizontal project cards */
     .projects-header {
       display: flex !important;
+      flex-direction: row !important;
       align-items: center !important;
       justify-content: space-between !important;
       width: 100% !important;
-      margin-bottom: 0.5rem !important;
+      margin-bottom: 1.5rem !important;
     }
 
     .carousel-nav {
@@ -77,6 +78,7 @@
       flex: 0 0 280px !important;
       min-width: 280px !important;
       max-width: 280px !important;
+      min-height: 230px !important;
       scroll-snap-align: start !important;
       padding: 1.6rem 1.4rem !important;
       border-radius: 20px !important;
@@ -200,15 +202,22 @@
         
         <!-- Language breakdown bar (auto-updated by projects.js) -->
         <div class="lang-bar">
+          <span class="lang-segment" style="width: 48%; background-color: #563d7c;" title="CSS: 47.8%"></span>
+          <span class="lang-segment" style="width: 29%; background-color: #e34c26;" title="HTML: 29.4%"></span>
+          <span class="lang-segment" style="width: 23%; background-color: #f1e05a;" title="JavaScript: 22.8%"></span>
         </div>
         <div class="lang-tags">
+          <span class="lang-tag"><span class="lang-dot" style="background-color: #563d7c;"></span>CSS 47.8%</span>
+          <span class="lang-tag"><span class="lang-dot" style="background-color: #e34c26;"></span>HTML 29.4%</span>
+          <span class="lang-tag"><span class="lang-dot" style="background-color: #f1e05a;"></span>JavaScript 22.8%</span>
         </div>
 
         <p class="project-desc">
+          It's a website, not much to say about it.
         </p>
       </article>
 
-      <!-- Project Card 2:Pikachu -->
+      <!-- Project Card 2: Pikachu -->
       <article class="project-card" data-repo="baodata/phikachuuuu">
         <h3 class="project-title">
           <a href="https://github.com/baodata/phikachuuuu" target="_blank" rel="noopener noreferrer" class="project-title-link">
@@ -219,15 +228,20 @@
         
         <!-- Language breakdown bar (auto-updated by projects.js) -->
         <div class="lang-bar">
+          <span class="lang-segment" style="width: 93%; background-color: #f34b7d;" title="C++: 93.3%"></span>
+          <span class="lang-segment" style="width: 7%; background-color: #555555;" title="C: 6.7%"></span>
         </div>
         <div class="lang-tags">
+          <span class="lang-tag"><span class="lang-dot" style="background-color: #f34b7d;"></span>C++ 93.3%</span>
+          <span class="lang-tag"><span class="lang-dot" style="background-color: #555555;"></span>C 6.7%</span>
         </div>
 
         <p class="project-desc">
+          My first programming project, a basic Match-2 game
         </p>
       </article>
 
-      <!-- Project Card 3:labaodutCrypto -->
+      <!-- Project Card 3: Trading bots -->
       <article class="project-card" data-repo="baodata/labaodutCrypto">
         <h3 class="project-title">
           <a href="https://github.com/baodata/labaodutCrypto" target="_blank" rel="noopener noreferrer" class="project-title-link">
@@ -238,11 +252,14 @@
         
         <!-- Language breakdown bar (auto-updated by projects.js) -->
         <div class="lang-bar">
+          <span class="lang-segment" style="width: 100%; background-color: #3572A5;" title="Python: 100%"></span>
         </div>
         <div class="lang-tags">
+          <span class="lang-tag"><span class="lang-dot" style="background-color: #3572A5;"></span>Python 100%</span>
         </div>
 
         <p class="project-desc">
+          An attempt to learn more about deep learning, GNNs, and PPO
         </p>
       </article>
     </div>
