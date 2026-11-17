@@ -1,4 +1,4 @@
-@import url('./variables.css?v=7');
+@import url('./variables.css?v=8');
 
 html {
   scroll-behavior: smooth;
@@ -280,12 +280,36 @@ body {
   padding: 0 2rem;
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: space-between;
   background: var(--surface-glass);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border-top: 1px solid var(--border-subtle);
   z-index: 10;
+}
+
+.footer-contact {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.footer-contact-label {
+  color: var(--text-faint);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+.footer-email-link {
+  color: var(--text-primary);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.footer-email-link:hover {
+  color: var(--accent-green);
 }
 
 .social-links {
@@ -325,7 +349,7 @@ body {
   z-index: 2;
 }
 
-#contact.section {
+#projects.section {
   padding-bottom: 8rem; /* Extra spacing so the fixed bottom bar doesn't overlap content */
 }
 
