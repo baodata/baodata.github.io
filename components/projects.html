@@ -53,7 +53,7 @@
       max-width: 100% !important;
       min-width: 0 !important;
       overflow-x: auto !important;
-      padding: 0.5rem 0.25rem 1rem 0.25rem !important;
+      padding: 0.6rem 0 1.25rem 0 !important;
       scrollbar-width: none !important;
       -ms-overflow-style: none !important;
       -webkit-overflow-scrolling: touch !important;
@@ -79,9 +79,9 @@
     }
 
     .project-card {
-      flex: 0 0 280px !important;
-      min-width: 280px !important;
-      max-width: 280px !important;
+      flex: 0 0 calc((100% - 2.5rem) / 3) !important;
+      min-width: calc((100% - 2.5rem) / 3) !important;
+      max-width: calc((100% - 2.5rem) / 3) !important;
       min-height: 230px !important;
       padding: 1.6rem 1.4rem !important;
       border-radius: 20px !important;
@@ -93,7 +93,24 @@
       flex-direction: column !important;
       align-items: flex-start !important;
       text-align: left !important;
+      box-sizing: border-box !important;
       will-change: transform;
+    }
+
+    @media (max-width: 768px) {
+      .project-card {
+        flex: 0 0 calc((100% - 1.25rem) / 2) !important;
+        min-width: calc((100% - 1.25rem) / 2) !important;
+        max-width: calc((100% - 1.25rem) / 2) !important;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .project-card {
+        flex: 0 0 100% !important;
+        min-width: 100% !important;
+        max-width: 100% !important;
+      }
     }
 
     .project-card:hover {

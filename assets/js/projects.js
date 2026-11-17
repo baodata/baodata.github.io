@@ -252,11 +252,22 @@ function initProjectsCarousel() {
     updateDots();
   }
 
-  // Set initial scroll position to the center set (index 2 of 5 sets)
+  // Target card index for arrow navigation to guarantee rounding
+  let targetIndex = null;
+
+  function getBaseIndex() {
+    const step = getCardStep();
+    if (step <= 0) return 0;
+    return Math.round(track.scrollLeft / step);
+  }
+
+  // Set initial scroll position to the center set (index 2 of 5 sets), perfectly card-aligned
   function resetToCenter() {
     const setWidth = getSetWidth();
-    if (setWidth > 0) {
-      track.scrollLeft = setWidth * 2;
+    const step = getCardStep();
+    if (setWidth > 0 && step > 0) {
+      targetIndex = null;
+      track.scrollLeft = Math.round((setWidth * 2) / step) * step;
       updateDots();
     }
   }
@@ -285,6 +296,7 @@ function initProjectsCarousel() {
   // Smoothly snaps the closest card into view
   function snapToNearest() {
     stopMomentum();
+    targetIndex = null;
     const step = getCardStep();
     if (step <= 0) return;
 
@@ -335,10 +347,18 @@ function initProjectsCarousel() {
       stopMomentum();
       const step = getCardStep();
       const setWidth = getSetWidth();
+      if (step <= 0 || setWidth <= 0) return;
+
       if (track.scrollLeft >= 3 * setWidth - step) {
         track.scrollLeft -= setWidth;
+        if (targetIndex !== null) targetIndex = Math.round(track.scrollLeft / step);
       }
-      track.scrollBy({ left: step, behavior: 'smooth' });
+
+      const base = targetIndex !== null ? targetIndex : getBaseIndex();
+      targetIndex = base + 1;
+      const targetScroll = targetIndex * step;
+
+      track.scrollTo({ left: targetScroll, behavior: 'smooth' });
       requestAnimationFrame(updateDots);
     });
   }
@@ -348,10 +368,18 @@ function initProjectsCarousel() {
       stopMomentum();
       const step = getCardStep();
       const setWidth = getSetWidth();
+      if (step <= 0 || setWidth <= 0) return;
+
       if (track.scrollLeft <= setWidth) {
         track.scrollLeft += setWidth;
+        if (targetIndex !== null) targetIndex = Math.round(track.scrollLeft / step);
       }
-      track.scrollBy({ left: -step, behavior: 'smooth' });
+
+      const base = targetIndex !== null ? targetIndex : getBaseIndex();
+      targetIndex = base - 1;
+      const targetScroll = targetIndex * step;
+
+      track.scrollTo({ left: targetScroll, behavior: 'smooth' });
       requestAnimationFrame(updateDots);
     });
   }
@@ -360,6 +388,7 @@ function initProjectsCarousel() {
     if (e.pointerType === 'mouse' && e.button !== 0) return;
 
     stopMomentum();
+    targetIndex = null;
     isDown = true;
     hasDragged = false;
     startX = e.clientX;
@@ -452,11 +481,15 @@ function initProjectsCarousel() {
     requestAnimationFrame(updateDots);
     if (isDown || momentumRaf) return;
     clearTimeout(scrollTimeout);
-    scrollTimeout = setTimeout(normalizeScroll, 100);
+    scrollTimeout = setTimeout(() => {
+      targetIndex = null;
+      normalizeScroll();
+    }, 100);
   }, { passive: true });
 
   window.addEventListener('resize', () => {
     stopMomentum();
+    targetIndex = null;
     normalizeScroll();
     updateDots();
   });
