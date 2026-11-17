@@ -192,7 +192,6 @@ function initProjectsCarousel() {
 
   // Smooth scroll to card matching original index closest to current viewport
   function scrollToOriginalIndex(targetIdx) {
-    stopMomentum();
     const matchingCards = Array.from(track.querySelectorAll(`.project-card[data-index="${targetIdx}"]`));
     if (!matchingCards.length) return;
     let closestCard = matchingCards[0];
@@ -252,22 +251,11 @@ function initProjectsCarousel() {
     updateDots();
   }
 
-  // Target card index for arrow navigation to guarantee rounding
-  let targetIndex = null;
-
-  function getBaseIndex() {
-    const step = getCardStep();
-    if (step <= 0) return 0;
-    return Math.round(track.scrollLeft / step);
-  }
-
-  // Set initial scroll position to the center set (index 2 of 5 sets), perfectly card-aligned
+  // Set initial scroll position to the center set (index 2 of 5 sets)
   function resetToCenter() {
     const setWidth = getSetWidth();
-    const step = getCardStep();
-    if (setWidth > 0 && step > 0) {
-      targetIndex = null;
-      track.scrollLeft = Math.round((setWidth * 2) / step) * step;
+    if (setWidth > 0) {
+      track.scrollLeft = setWidth * 2;
       updateDots();
     }
   }
@@ -276,139 +264,58 @@ function initProjectsCarousel() {
   requestAnimationFrame(resetToCenter);
   setTimeout(resetToCenter, 100);
 
-  // Smooth momentum and pointer drag-to-scroll implementation
-  let isDown = false;
-  let startX = 0;
-  let scrollStart = 0;
-  let hasDragged = false;
-  let lastX = 0;
-  let lastTime = 0;
-  let velocity = 0;
-  let momentumRaf = null;
-
-  function stopMomentum() {
-    if (momentumRaf) {
-      cancelAnimationFrame(momentumRaf);
-      momentumRaf = null;
-    }
-  }
-
-  // Smoothly snaps the closest card into view
-  function snapToNearest() {
-    stopMomentum();
-    targetIndex = null;
-    const step = getCardStep();
-    if (step <= 0) return;
-
-    normalizeScroll();
-    const targetScroll = Math.round(track.scrollLeft / step) * step;
-    track.scrollTo({ left: targetScroll, behavior: 'smooth' });
-  }
-
-  // Natural momentum glide with exponential friction
-  function startMomentum() {
-    stopMomentum();
-    const minVelocity = 0.05;
-    const friction = 0.94;
-    let lastFrameTime = performance.now();
-
-    function stepMomentum(now) {
-      const dt = Math.min(now - lastFrameTime, 32);
-      lastFrameTime = now;
-
-      if (Math.abs(velocity) < minVelocity) {
-        snapToNearest();
-        return;
-      }
-
-      let newScroll = track.scrollLeft - (velocity * dt);
-      const setWidth = getSetWidth();
-
-      if (setWidth > 0) {
-        if (newScroll >= 3 * setWidth) {
-          newScroll -= setWidth;
-        } else if (newScroll < setWidth) {
-          newScroll += setWidth;
-        }
-      }
-
-      track.scrollLeft = newScroll;
-      updateDots();
-
-      velocity *= Math.pow(friction, dt / 16);
-      momentumRaf = requestAnimationFrame(stepMomentum);
-    }
-
-    momentumRaf = requestAnimationFrame(stepMomentum);
-  }
+  // Setup Next & Prev buttons
+  const prevBtn = document.getElementById('projects-prev');
+  const nextBtn = document.getElementById('projects-next');
 
   if (nextBtn) {
     nextBtn.addEventListener('click', () => {
-      stopMomentum();
       const step = getCardStep();
       const setWidth = getSetWidth();
-      if (step <= 0 || setWidth <= 0) return;
-
       if (track.scrollLeft >= 3 * setWidth - step) {
         track.scrollLeft -= setWidth;
-        if (targetIndex !== null) targetIndex = Math.round(track.scrollLeft / step);
       }
-
-      const base = targetIndex !== null ? targetIndex : getBaseIndex();
-      targetIndex = base + 1;
-      const targetScroll = targetIndex * step;
-
-      track.scrollTo({ left: targetScroll, behavior: 'smooth' });
+      track.scrollBy({ left: step, behavior: 'smooth' });
       requestAnimationFrame(updateDots);
     });
   }
 
   if (prevBtn) {
     prevBtn.addEventListener('click', () => {
-      stopMomentum();
       const step = getCardStep();
       const setWidth = getSetWidth();
-      if (step <= 0 || setWidth <= 0) return;
-
       if (track.scrollLeft <= setWidth) {
         track.scrollLeft += setWidth;
-        if (targetIndex !== null) targetIndex = Math.round(track.scrollLeft / step);
       }
-
-      const base = targetIndex !== null ? targetIndex : getBaseIndex();
-      targetIndex = base - 1;
-      const targetScroll = targetIndex * step;
-
-      track.scrollTo({ left: targetScroll, behavior: 'smooth' });
+      track.scrollBy({ left: -step, behavior: 'smooth' });
       requestAnimationFrame(updateDots);
     });
   }
 
-  track.addEventListener('pointerdown', (e) => {
-    if (e.pointerType === 'mouse' && e.button !== 0) return;
+  // Setup mouse drag-to-scroll
+  let isDown = false;
+  let startX = 0;
+  let scrollStart = 0;
+  let hasDragged = false;
 
-    stopMomentum();
-    targetIndex = null;
+  track.addEventListener('mousedown', (e) => {
     isDown = true;
     hasDragged = false;
-    startX = e.clientX;
-    lastX = e.clientX;
-    lastTime = performance.now();
+    startX = e.pageX - track.offsetLeft;
     scrollStart = track.scrollLeft;
-    velocity = 0;
-
-    track.style.scrollBehavior = 'auto';
-
-    try {
-      track.setPointerCapture(e.pointerId);
-    } catch {}
   });
 
-  track.addEventListener('pointermove', (e) => {
+  window.addEventListener('mouseup', () => {
     if (!isDown) return;
+    isDown = false;
+    track.classList.remove('is-dragging');
+    normalizeScroll();
+  });
 
-    const x = e.clientX;
-    const now = performance.now();
+  track.addEventListener('mousemove', (e) => {
+    if (!isDown) return;
+    e.preventDefault();
+    const x = e.pageX - track.offsetLeft;
     const walk = x - startX;
 
     if (Math.abs(walk) > 4) {
@@ -416,56 +323,21 @@ function initProjectsCarousel() {
       track.classList.add('is-dragging');
     }
 
-    if (hasDragged) {
-      const dt = now - lastTime;
-      if (dt > 0) {
-        const instantVelocity = (x - lastX) / dt;
-        velocity = velocity * 0.5 + instantVelocity * 0.5;
-      }
-      lastX = x;
-      lastTime = now;
+    let newScrollLeft = scrollStart - walk;
+    const setWidth = getSetWidth();
 
-      let newScrollLeft = scrollStart - walk;
-      const setWidth = getSetWidth();
-
-      if (setWidth > 0) {
-        if (newScrollLeft >= 3 * setWidth) {
-          newScrollLeft -= setWidth;
-          scrollStart -= setWidth;
-        } else if (newScrollLeft < setWidth) {
-          newScrollLeft += setWidth;
-          scrollStart += setWidth;
-        }
-      }
-
-      track.scrollLeft = newScrollLeft;
-      requestAnimationFrame(updateDots);
+    // Wrap dynamically during continuous dragging
+    if (newScrollLeft >= 3 * setWidth) {
+      newScrollLeft -= setWidth;
+      scrollStart -= setWidth;
+    } else if (newScrollLeft < setWidth) {
+      newScrollLeft += setWidth;
+      scrollStart += setWidth;
     }
+
+    track.scrollLeft = newScrollLeft;
+    requestAnimationFrame(updateDots);
   });
-
-  function endDrag(e) {
-    if (!isDown) return;
-    isDown = false;
-    track.classList.remove('is-dragging');
-    track.style.scrollBehavior = '';
-
-    try {
-      if (e && e.pointerId && track.hasPointerCapture(e.pointerId)) {
-        track.releasePointerCapture(e.pointerId);
-      }
-    } catch {}
-
-    if (hasDragged) {
-      if (Math.abs(velocity) > 0.15) {
-        startMomentum();
-      } else {
-        snapToNearest();
-      }
-    }
-  }
-
-  track.addEventListener('pointerup', endDrag);
-  track.addEventListener('pointercancel', endDrag);
 
   // Prevent navigating to repo link if the mouse was dragged
   track.addEventListener('click', (e) => {
@@ -479,17 +351,12 @@ function initProjectsCarousel() {
   let scrollTimeout = null;
   track.addEventListener('scroll', () => {
     requestAnimationFrame(updateDots);
-    if (isDown || momentumRaf) return;
+    if (isDown) return;
     clearTimeout(scrollTimeout);
-    scrollTimeout = setTimeout(() => {
-      targetIndex = null;
-      normalizeScroll();
-    }, 100);
+    scrollTimeout = setTimeout(normalizeScroll, 80);
   }, { passive: true });
 
   window.addEventListener('resize', () => {
-    stopMomentum();
-    targetIndex = null;
     normalizeScroll();
     updateDots();
   });

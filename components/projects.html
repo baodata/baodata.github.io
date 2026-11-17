@@ -53,13 +53,12 @@
       max-width: 100% !important;
       min-width: 0 !important;
       overflow-x: auto !important;
-      padding: 0.6rem 0 1.25rem 0 !important;
+      padding: 0.5rem 0.25rem 1rem 0.25rem !important;
       scrollbar-width: none !important;
       -ms-overflow-style: none !important;
       -webkit-overflow-scrolling: touch !important;
       cursor: grab !important;
       user-select: none !important;
-      touch-action: pan-y !important;
     }
 
     .projects-track::-webkit-scrollbar {
@@ -69,48 +68,28 @@
     .projects-track.is-dragging {
       cursor: grabbing !important;
       scroll-behavior: auto !important;
-      scroll-snap-type: none !important;
     }
 
     .projects-track.is-dragging .project-card {
       pointer-events: none !important;
-      transition: none !important;
-      transform: none !important;
     }
 
     .project-card {
-      flex: 0 0 calc((100% - 2.5rem) / 3) !important;
-      min-width: calc((100% - 2.5rem) / 3) !important;
-      max-width: calc((100% - 2.5rem) / 3) !important;
+      flex: 0 0 280px !important;
+      min-width: 280px !important;
+      max-width: 280px !important;
       min-height: 230px !important;
+      scroll-snap-align: start !important;
       padding: 1.6rem 1.4rem !important;
       border-radius: 20px !important;
       background: rgba(18, 26, 23, 0.85) !important;
       border: 1.5px solid rgba(16, 185, 129, 0.35) !important;
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35) !important;
-      transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease !important;
+      transition: all 0.25s ease !important;
       display: flex !important;
       flex-direction: column !important;
       align-items: flex-start !important;
       text-align: left !important;
-      box-sizing: border-box !important;
-      will-change: transform;
-    }
-
-    @media (max-width: 768px) {
-      .project-card {
-        flex: 0 0 calc((100% - 1.25rem) / 2) !important;
-        min-width: calc((100% - 1.25rem) / 2) !important;
-        max-width: calc((100% - 1.25rem) / 2) !important;
-      }
-    }
-
-    @media (max-width: 520px) {
-      .project-card {
-        flex: 0 0 100% !important;
-        min-width: 100% !important;
-        max-width: 100% !important;
-      }
     }
 
     .project-card:hover {
