@@ -104,78 +104,106 @@ async function fetchAllRepoData() {
   }));
 }
 
-// Initialize infinite looping carousel with mouse drag, navigation controls, and pagination dots
+// Initialize infinite looping carousel with mouse drag and navigation controls
 function initProjectsCarousel() {
-  const frame = document.getElementById('projects-frame');
   const track = document.getElementById('projects-track');
-  const dotsContainer = document.getElementById('carousel-dots');
-  if (!frame || !track || track.dataset.carouselInit === 'true') return;
+  if (!track || track.dataset.carouselInit === 'true') return;
 
   const originalCards = Array.from(track.querySelectorAll('.project-card:not(.is-clone)'));
-  const count = originalCards.length;
-  if (count < 2) return;
+  if (originalCards.length < 2) return;
 
   track.dataset.carouselInit = 'true';
 
-  // Prepend 1 clone set and append 1 clone set for seamless infinite loop
-  originalCards.slice().reverse().forEach(card => {
-    const clone = card.cloneNode(true);
-    clone.classList.add('is-clone');
-    track.prepend(clone);
-  });
+  // Prepend 2 clone sets (for ample infinite left scroll buffer)
+  for (let s = 0; s < 2; s++) {
+    originalCards.slice().reverse().forEach(card => {
+      const clone = card.cloneNode(true);
+      clone.classList.add('is-clone');
+      track.prepend(clone);
+    });
+  }
 
-  originalCards.forEach(card => {
-    const clone = card.cloneNode(true);
-    clone.classList.add('is-clone');
-    track.appendChild(clone);
-  });
+  // Append 2 clone sets (for ample infinite right scroll buffer)
+  for (let s = 0; s < 2; s++) {
+    originalCards.forEach(card => {
+      const clone = card.cloneNode(true);
+      clone.classList.add('is-clone');
+      track.appendChild(clone);
+    });
+  }
 
-  let currentIndex = count; // Start at the original (middle) set
-  let isTransitioning = false;
+  // Calculate width of one card + gap
+  function getCardStep() {
+    const firstCard = track.querySelector('.project-card');
+    if (!firstCard) return 300;
+    const style = window.getComputedStyle(track);
+    const gap = parseFloat(style.gap) || 20;
+    return firstCard.getBoundingClientRect().width + gap;
+  }
 
-  // Dynamically calculate card dimensions so exactly 3 cards fit on desktop
-  function updateCardSizing() {
-    const frameWidth = frame.clientWidth;
-    if (frameWidth <= 0) return;
+  // Calculate width of one entire set of cards
+  function getSetWidth() {
+    return getCardStep() * originalCards.length;
+  }
 
-    let visibleCount = 3;
-    let gap = 20;
-
-    if (window.innerWidth <= 600) {
-      visibleCount = 1;
-      gap = 12;
-    } else if (window.innerWidth <= 880) {
-      visibleCount = 2;
-      gap = 16;
+  // Normalize position to maintain infinite seamless loop
+  // Initialize indicator dots
+  const dotsContainer = document.getElementById('projects-dots');
+  if (dotsContainer) {
+    dotsContainer.innerHTML = '';
+    for (let i = 0; i < originalCards.length; i++) {
+      const dot = document.createElement('button');
+      dot.type = 'button';
+      dot.className = 'carousel-dot';
+      dot.setAttribute('aria-label', `Go to project ${i + 1}`);
+      dot.dataset.dotIndex = i;
+      dot.addEventListener('click', () => {
+        scrollToOriginalIndex(i);
+      });
+      dotsContainer.appendChild(dot);
     }
+  }
 
-    const totalGaps = (visibleCount - 1) * gap;
-    const cardWidth = Math.floor((frameWidth - totalGaps) / visibleCount);
+  // Smooth scroll to card matching original index closest to current viewport
+  function scrollToOriginalIndex(targetIdx) {
+    const matchingCards = Array.from(track.querySelectorAll(`.project-card[data-index="${targetIdx}"]`));
+    if (!matchingCards.length) return;
+    let closestCard = matchingCards[0];
+    let minDiff = Infinity;
+    const currentLeft = track.scrollLeft;
+    matchingCards.forEach(card => {
+      const diff = Math.abs(card.offsetLeft - track.offsetLeft - currentLeft);
+      if (diff < minDiff) {
+        minDiff = diff;
+        closestCard = card;
+      }
+    });
+    track.scrollTo({ left: closestCard.offsetLeft - track.offsetLeft, behavior: 'smooth' });
+  }
 
+  // Update dots based on which cards are currently visible in viewport
+  function updateDots() {
+    const dots = document.querySelectorAll('.carousel-dot');
+    if (!dots.length) return;
+
+    const trackRect = track.getBoundingClientRect();
+    const visibleIndices = new Set();
     const allCards = track.querySelectorAll('.project-card');
-    allCards.forEach(c => {
-      c.style.flex = `0 0 ${cardWidth}px`;
-      c.style.width = `${cardWidth}px`;
-      c.style.minWidth = `${cardWidth}px`;
-      c.style.maxWidth = `${cardWidth}px`;
+
+    allCards.forEach(card => {
+      const cardRect = card.getBoundingClientRect();
+      const overlap = Math.max(0, Math.min(cardRect.right, trackRect.right) - Math.max(cardRect.left, trackRect.left));
+      // Card is considered visible if at least 35% of its width is within track bounds
+      if (overlap > cardRect.width * 0.35) {
+        const idx = parseInt(card.getAttribute('data-index'), 10);
+        if (!isNaN(idx)) {
+          visibleIndices.add(idx);
+        }
+      }
     });
 
-    track.style.gap = `${gap}px`;
-  }
-
-  function getStep() {
-    const first = track.querySelector('.project-card');
-    if (!first) return 300;
-    const gap = parseFloat(track.style.gap) || 20;
-    return first.offsetWidth + gap;
-  }
-
-  function updateDots() {
-    if (!dotsContainer) return;
-    const dots = dotsContainer.querySelectorAll('.carousel-dot');
-    const activeIdx = ((currentIndex - count) % count + count) % count;
-    dots.forEach((dot, idx) => {
-      if (idx === activeIdx) {
+    dots.forEach((dot, i) => {
+      if (visibleIndices.has(i)) {
         dot.classList.add('active');
       } else {
         dot.classList.remove('active');
@@ -183,153 +211,129 @@ function initProjectsCarousel() {
     });
   }
 
-  function updateTransform(animate = true) {
-    const step = getStep();
-    if (!animate) {
-      track.classList.add('no-transition');
-    } else {
-      track.classList.remove('no-transition');
-    }
+  // Normalize position to maintain infinite seamless loop
+  function normalizeScroll() {
+    const setWidth = getSetWidth();
+    if (setWidth <= 0) return;
 
-    const offset = -(currentIndex * step);
-    track.style.transform = `translateX(${offset}px)`;
-
-    if (!animate) {
-      track.offsetHeight; // Force DOM reflow
-      track.classList.remove('no-transition');
+    // Buffer range: [setWidth, 3 * setWidth)
+    if (track.scrollLeft >= 3 * setWidth) {
+      track.scrollLeft -= setWidth;
+    } else if (track.scrollLeft < setWidth) {
+      track.scrollLeft += setWidth;
     }
     updateDots();
   }
 
-  function goToIndex(index, animate = true) {
-    if (isTransitioning && animate) return;
-    if (animate) isTransitioning = true;
-    currentIndex = index;
-    updateTransform(animate);
-  }
-
-  function next() {
-    goToIndex(currentIndex + 1);
-  }
-
-  function prev() {
-    goToIndex(currentIndex - 1);
-  }
-
-  // Handle loop reset at boundary after animation finishes
-  track.addEventListener('transitionend', (e) => {
-    if (e.target !== track || e.propertyName !== 'transform') return;
-    isTransitioning = false;
-
-    if (currentIndex >= count * 2) {
-      currentIndex -= count;
-      updateTransform(false);
-    } else if (currentIndex < count) {
-      currentIndex += count;
-      updateTransform(false);
+  // Set initial scroll position to the center set (index 2 of 5 sets)
+  function resetToCenter() {
+    const setWidth = getSetWidth();
+    if (setWidth > 0) {
+      track.scrollLeft = setWidth * 2;
+      updateDots();
     }
-  });
+  }
 
-  // Next & Prev header buttons
+  resetToCenter();
+  requestAnimationFrame(resetToCenter);
+  setTimeout(resetToCenter, 100);
+
+  // Setup Next & Prev buttons
   const prevBtn = document.getElementById('projects-prev');
   const nextBtn = document.getElementById('projects-next');
-  if (nextBtn) nextBtn.addEventListener('click', next);
-  if (prevBtn) prevBtn.addEventListener('click', prev);
 
-  // Pagination dots click handler
-  if (dotsContainer) {
-    const dots = dotsContainer.querySelectorAll('.carousel-dot');
-    dots.forEach((dot, idx) => {
-      dot.addEventListener('click', () => {
-        goToIndex(count + idx);
-      });
+  if (nextBtn) {
+    nextBtn.addEventListener('click', () => {
+      const step = getCardStep();
+      const setWidth = getSetWidth();
+      if (track.scrollLeft >= 3 * setWidth - step) {
+        track.scrollLeft -= setWidth;
+      }
+      track.scrollBy({ left: step, behavior: 'smooth' });
+      requestAnimationFrame(updateDots);
     });
   }
 
-  // Mouse & Touch Dragging gestures
+  if (prevBtn) {
+    prevBtn.addEventListener('click', () => {
+      const step = getCardStep();
+      const setWidth = getSetWidth();
+      if (track.scrollLeft <= setWidth) {
+        track.scrollLeft += setWidth;
+      }
+      track.scrollBy({ left: -step, behavior: 'smooth' });
+      requestAnimationFrame(updateDots);
+    });
+  }
+
+  // Setup mouse drag-to-scroll
   let isDown = false;
   let startX = 0;
-  let diffX = 0;
-  let hasMoved = false;
+  let scrollStart = 0;
+  let hasDragged = false;
 
-  function handleStart(clientX) {
-    if (isTransitioning) return;
+  track.addEventListener('mousedown', (e) => {
     isDown = true;
-    hasMoved = false;
-    startX = clientX;
-    diffX = 0;
-    frame.classList.add('is-dragging');
-    track.classList.add('no-transition');
-  }
+    hasDragged = false;
+    startX = e.pageX - track.offsetLeft;
+    scrollStart = track.scrollLeft;
+  });
 
-  function handleMove(clientX, e) {
-    if (!isDown) return;
-    diffX = clientX - startX;
-    if (Math.abs(diffX) > 6) {
-      hasMoved = true;
-      if (e && e.cancelable) e.preventDefault();
-    }
-    const step = getStep();
-    const currentOffset = -(currentIndex * step);
-    track.style.transform = `translateX(${currentOffset + diffX}px)`;
-  }
-
-  function handleEnd() {
+  window.addEventListener('mouseup', () => {
     if (!isDown) return;
     isDown = false;
-    frame.classList.remove('is-dragging');
-    track.classList.remove('no-transition');
+    track.classList.remove('is-dragging');
+    normalizeScroll();
+  });
 
-    const threshold = 45;
-    if (diffX < -threshold) {
-      next();
-    } else if (diffX > threshold) {
-      prev();
-    } else {
-      updateTransform(true); // Snap back if drag threshold wasn't met
+  track.addEventListener('mousemove', (e) => {
+    if (!isDown) return;
+    e.preventDefault();
+    const x = e.pageX - track.offsetLeft;
+    const walk = x - startX;
+
+    if (Math.abs(walk) > 4) {
+      hasDragged = true;
+      track.classList.add('is-dragging');
     }
-    diffX = 0;
-  }
 
-  frame.addEventListener('mousedown', (e) => handleStart(e.clientX));
-  window.addEventListener('mousemove', (e) => handleMove(e.clientX, e));
-  window.addEventListener('mouseup', handleEnd);
+    let newScrollLeft = scrollStart - walk;
+    const setWidth = getSetWidth();
 
-  frame.addEventListener('touchstart', (e) => {
-    if (e.touches.length === 1) handleStart(e.touches[0].clientX);
-  }, { passive: true });
+    // Wrap dynamically during continuous dragging
+    if (newScrollLeft >= 3 * setWidth) {
+      newScrollLeft -= setWidth;
+      scrollStart -= setWidth;
+    } else if (newScrollLeft < setWidth) {
+      newScrollLeft += setWidth;
+      scrollStart += setWidth;
+    }
 
-  frame.addEventListener('touchmove', (e) => {
-    if (e.touches.length === 1) handleMove(e.touches[0].clientX, e);
-  }, { passive: false });
+    track.scrollLeft = newScrollLeft;
+    requestAnimationFrame(updateDots);
+  });
 
-  frame.addEventListener('touchend', handleEnd);
-
-  // Prevent link click when dragged
+  // Prevent navigating to repo link if the mouse was dragged
   track.addEventListener('click', (e) => {
-    if (hasMoved) {
+    if (hasDragged) {
       e.preventDefault();
       e.stopPropagation();
     }
   }, true);
 
-  // Handle window resizing
-  window.addEventListener('resize', () => {
-    updateCardSizing();
-    updateTransform(false);
-  });
+  // Passive listener for touch/wheel scroll wrap
+  let scrollTimeout = null;
+  track.addEventListener('scroll', () => {
+    requestAnimationFrame(updateDots);
+    if (isDown) return;
+    clearTimeout(scrollTimeout);
+    scrollTimeout = setTimeout(normalizeScroll, 80);
+  }, { passive: true });
 
-  // Initial render
-  updateCardSizing();
-  updateTransform(false);
-  requestAnimationFrame(() => {
-    updateCardSizing();
-    updateTransform(false);
+  window.addEventListener('resize', () => {
+    normalizeScroll();
+    updateDots();
   });
-  setTimeout(() => {
-    updateCardSizing();
-    updateTransform(false);
-  }, 100);
 }
 
 // Master initialization

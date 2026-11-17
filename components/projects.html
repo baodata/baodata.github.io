@@ -45,47 +45,47 @@
       transform: translateY(0) scale(0.95) !important;
     }
 
-    /* Frame container that neatly houses and clips the cards */
-    .projects-frame {
-      width: 100% !important;
-      overflow: hidden !important;
-      position: relative !important;
-      padding: 0.5rem 0 1rem 0 !important;
-      cursor: grab !important;
-      user-select: none !important;
-      border-radius: 20px !important;
-    }
-
-    .projects-frame.is-dragging {
-      cursor: grabbing !important;
-    }
-
     .projects-track {
       display: flex !important;
       flex-direction: row !important;
       gap: 1.25rem !important;
-      width: max-content !important;
-      will-change: transform !important;
-      transition: transform 0.45s cubic-bezier(0.25, 1, 0.5, 1) !important;
+      width: 100% !important;
+      max-width: 100% !important;
+      min-width: 0 !important;
+      overflow-x: auto !important;
+      padding: 0.5rem 0.25rem 1rem 0.25rem !important;
+      scrollbar-width: none !important;
+      -ms-overflow-style: none !important;
+      -webkit-overflow-scrolling: touch !important;
+      cursor: grab !important;
+      user-select: none !important;
     }
 
-    .projects-track.no-transition {
-      transition: none !important;
+    .projects-track::-webkit-scrollbar {
+      display: none !important;
     }
 
-    .projects-frame.is-dragging .project-card {
+    .projects-track.is-dragging {
+      cursor: grabbing !important;
+      scroll-behavior: auto !important;
+    }
+
+    .projects-track.is-dragging .project-card {
       pointer-events: none !important;
     }
 
     .project-card {
-      box-sizing: border-box !important;
+      flex: 0 0 280px !important;
+      min-width: 280px !important;
+      max-width: 280px !important;
       min-height: 230px !important;
+      scroll-snap-align: start !important;
       padding: 1.6rem 1.4rem !important;
       border-radius: 20px !important;
       background: rgba(18, 26, 23, 0.85) !important;
       border: 1.5px solid rgba(16, 185, 129, 0.35) !important;
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35) !important;
-      transition: border-color 0.25s ease, background 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease !important;
+      transition: all 0.25s ease !important;
       display: flex !important;
       flex-direction: column !important;
       align-items: flex-start !important;
@@ -175,36 +175,37 @@
       margin: 0 !important;
     }
 
-    /* Carousel pagination indicator dots */
+    /* Carousel pagination dots */
     .carousel-dots {
       display: flex !important;
-      align-items: center !important;
       justify-content: center !important;
+      align-items: center !important;
       gap: 0.6rem !important;
-      margin-top: 1.25rem !important;
       width: 100% !important;
+      margin-top: 1.25rem !important;
     }
 
     .carousel-dot {
-      width: 8px !important;
-      height: 8px !important;
-      padding: 0 !important;
-      border-radius: 9999px !important;
-      background: rgba(255, 255, 255, 0.2) !important;
-      border: none !important;
-      outline: none !important;
+      width: 9px !important;
+      height: 9px !important;
+      border-radius: 50% !important;
+      background: rgba(255, 255, 255, 0.18) !important;
+      border: 1px solid rgba(255, 255, 255, 0.08) !important;
       cursor: pointer !important;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-    }
-
-    .carousel-dot:hover:not(.active) {
-      background: rgba(255, 255, 255, 0.45) !important;
+      padding: 0 !important;
+      outline: none !important;
+      transition: all 0.25s ease !important;
     }
 
     .carousel-dot.active {
-      width: 24px !important;
       background: var(--accent-green) !important;
-      box-shadow: 0 0 12px rgba(16, 185, 129, 0.7) !important;
+      border-color: var(--accent-green) !important;
+      box-shadow: 0 0 10px rgba(16, 185, 129, 0.8), 0 0 4px var(--accent-green) !important;
+      transform: scale(1.2) !important;
+    }
+
+    .carousel-dot:hover:not(.active) {
+      background: rgba(255, 255, 255, 0.35) !important;
     }
   </style>
 
@@ -221,88 +222,106 @@
       </div>
     </div>
 
-    <!-- Small frame enclosing the small project cards -->
-    <div class="projects-frame" id="projects-frame">
-      <div class="projects-track" id="projects-track">
-        <!-- Project Card 1: This website -->
-        <article class="project-card" data-repo="baodata/baodata.github.io">
-          <h3 class="project-title">
-            <a href="https://github.com/baodata/baodata.github.io" target="_blank" rel="noopener noreferrer" class="project-title-link">
-              <span>This website</span>
-              <svg class="external-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
-            </a>
-          </h3>
-          
-          <!-- Language breakdown bar (auto-updated by projects.js) -->
-          <div class="lang-bar">
-            <span class="lang-segment" style="width: 48%; background-color: #563d7c;" title="CSS: 47.8%"></span>
-            <span class="lang-segment" style="width: 29%; background-color: #e34c26;" title="HTML: 29.4%"></span>
-            <span class="lang-segment" style="width: 23%; background-color: #f1e05a;" title="JavaScript: 22.8%"></span>
-          </div>
-          <div class="lang-tags">
-            <span class="lang-tag"><span class="lang-dot" style="background-color: #563d7c;"></span>CSS 47.8%</span>
-            <span class="lang-tag"><span class="lang-dot" style="background-color: #e34c26;"></span>HTML 29.4%</span>
-            <span class="lang-tag"><span class="lang-dot" style="background-color: #f1e05a;"></span>JavaScript 22.8%</span>
-          </div>
+    <!-- Horizontal track of small project cards -->
+    <div class="projects-track" id="projects-track">
+      <!-- Project Card 1: This website -->
+      <article class="project-card" data-repo="baodata/baodata.github.io" data-index="0">
+        <h3 class="project-title">
+          <a href="https://github.com/baodata/baodata.github.io" target="_blank" rel="noopener noreferrer" class="project-title-link">
+            <span>This website</span>
+            <svg class="external-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+          </a>
+        </h3>
+        
+        <!-- Language breakdown bar (auto-updated by projects.js) -->
+        <div class="lang-bar">
+          <span class="lang-segment" style="width: 48%; background-color: #563d7c;" title="CSS: 47.8%"></span>
+          <span class="lang-segment" style="width: 29%; background-color: #e34c26;" title="HTML: 29.4%"></span>
+          <span class="lang-segment" style="width: 23%; background-color: #f1e05a;" title="JavaScript: 22.8%"></span>
+        </div>
+        <div class="lang-tags">
+          <span class="lang-tag"><span class="lang-dot" style="background-color: #563d7c;"></span>CSS 47.8%</span>
+          <span class="lang-tag"><span class="lang-dot" style="background-color: #e34c26;"></span>HTML 29.4%</span>
+          <span class="lang-tag"><span class="lang-dot" style="background-color: #f1e05a;"></span>JavaScript 22.8%</span>
+        </div>
 
-          <p class="project-desc">
-            It's a website, not much to say about it.
-          </p>
-        </article>
+        <p class="project-desc">
+          It's a website, not much to say about it.
+        </p>
+      </article>
 
-        <!-- Project Card 2: Pikachu -->
-        <article class="project-card" data-repo="baodata/phikachuuuu">
-          <h3 class="project-title">
-            <a href="https://github.com/baodata/phikachuuuu" target="_blank" rel="noopener noreferrer" class="project-title-link">
-              <span>Pikachu</span>
-              <svg class="external-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
-            </a>
-          </h3>
-          
-          <!-- Language breakdown bar (auto-updated by projects.js) -->
-          <div class="lang-bar">
-            <span class="lang-segment" style="width: 93%; background-color: #f34b7d;" title="C++: 93.3%"></span>
-            <span class="lang-segment" style="width: 7%; background-color: #555555;" title="C: 6.7%"></span>
-          </div>
-          <div class="lang-tags">
-            <span class="lang-tag"><span class="lang-dot" style="background-color: #f34b7d;"></span>C++ 93.3%</span>
-            <span class="lang-tag"><span class="lang-dot" style="background-color: #555555;"></span>C 6.7%</span>
-          </div>
+      <!-- Project Card 2: Pikachu -->
+      <article class="project-card" data-repo="baodata/phikachuuuu" data-index="1">
+        <h3 class="project-title">
+          <a href="https://github.com/baodata/phikachuuuu" target="_blank" rel="noopener noreferrer" class="project-title-link">
+            <span>Pikachu</span>
+            <svg class="external-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+          </a>
+        </h3>
+        
+        <!-- Language breakdown bar (auto-updated by projects.js) -->
+        <div class="lang-bar">
+          <span class="lang-segment" style="width: 93%; background-color: #f34b7d;" title="C++: 93.3%"></span>
+          <span class="lang-segment" style="width: 7%; background-color: #555555;" title="C: 6.7%"></span>
+        </div>
+        <div class="lang-tags">
+          <span class="lang-tag"><span class="lang-dot" style="background-color: #f34b7d;"></span>C++ 93.3%</span>
+          <span class="lang-tag"><span class="lang-dot" style="background-color: #555555;"></span>C 6.7%</span>
+        </div>
 
-          <p class="project-desc">
-            My first programming project, a basic Match-2 game
-          </p>
-        </article>
+        <p class="project-desc">
+          My first programming project, a basic Match-2 game
+        </p>
+      </article>
 
-        <!-- Project Card 3: Trading bots -->
-        <article class="project-card" data-repo="baodata/labaodutCrypto">
-          <h3 class="project-title">
-            <a href="https://github.com/baodata/labaodutCrypto" target="_blank" rel="noopener noreferrer" class="project-title-link">
-              <span>Trading bots</span>
-              <svg class="external-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
-            </a>
-          </h3>
-          
-          <!-- Language breakdown bar (auto-updated by projects.js) -->
-          <div class="lang-bar">
-            <span class="lang-segment" style="width: 100%; background-color: #3572A5;" title="Python: 100%"></span>
-          </div>
-          <div class="lang-tags">
-            <span class="lang-tag"><span class="lang-dot" style="background-color: #3572A5;"></span>Python 100%</span>
-          </div>
+      <!-- Project Card 3: Trading bots -->
+      <article class="project-card" data-repo="baodata/labaodutCrypto" data-index="2">
+        <h3 class="project-title">
+          <a href="https://github.com/baodata/labaodutCrypto" target="_blank" rel="noopener noreferrer" class="project-title-link">
+            <span>Trading bots</span>
+            <svg class="external-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+          </a>
+        </h3>
+        
+        <!-- Language breakdown bar (auto-updated by projects.js) -->
+        <div class="lang-bar">
+          <span class="lang-segment" style="width: 100%; background-color: #3572A5;" title="Python: 100%"></span>
+        </div>
+        <div class="lang-tags">
+          <span class="lang-tag"><span class="lang-dot" style="background-color: #3572A5;"></span>Python 100%</span>
+        </div>
 
-          <p class="project-desc">
-            An attempt to learn more about deep learning, GNNs, and PPO
-          </p>
-        </article>
-      </div>
+        <p class="project-desc">
+          An attempt to learn more about deep learning, GNNs, and PPO
+        </p>
+      </article>
+
+      <!-- Project Card 4: Placeholder -->
+      <article class="project-card" data-index="3">
+        <h3 class="project-title">
+          <span class="project-title-link">
+            <span>Upcoming Project</span>
+            <span style="font-size: 0.72rem; padding: 2px 7px; border-radius: 9999px; background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.35); margin-left: 0.35rem;">WIP</span>
+          </span>
+        </h3>
+        
+        <!-- Language breakdown bar -->
+        <div class="lang-bar">
+          <span class="lang-segment" style="width: 60%; background-color: #3178c6;" title="TypeScript: 60%"></span>
+          <span class="lang-segment" style="width: 40%; background-color: #dea584;" title="Rust: 40%"></span>
+        </div>
+        <div class="lang-tags">
+          <span class="lang-tag"><span class="lang-dot" style="background-color: #3178c6;"></span>TypeScript 60%</span>
+          <span class="lang-tag"><span class="lang-dot" style="background-color: #dea584;"></span>Rust 40%</span>
+        </div>
+
+        <p class="project-desc">
+          Next creative experiment currently in progress. Stay tuned for future updates!
+        </p>
+      </article>
     </div>
 
-    <!-- Indicator Dots showing which project is in focus -->
-    <div class="carousel-dots" id="carousel-dots">
-      <button type="button" class="carousel-dot active" data-index="0" aria-label="Go to project 1"></button>
-      <button type="button" class="carousel-dot" data-index="1" aria-label="Go to project 2"></button>
-      <button type="button" class="carousel-dot" data-index="2" aria-label="Go to project 3"></button>
-    </div>
+    <!-- Dots indicator below cards -->
+    <div class="carousel-dots" id="projects-dots"></div>
   </div>
 </section>
